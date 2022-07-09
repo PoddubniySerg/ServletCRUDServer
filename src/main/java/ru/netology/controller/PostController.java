@@ -1,6 +1,7 @@
 package ru.netology.controller;
 
 import com.google.gson.Gson;
+import org.springframework.stereotype.Controller;
 import ru.netology.exception.NotFoundException;
 import ru.netology.model.Post;
 import ru.netology.service.IPostService;
@@ -9,7 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Reader;
 
-public class PostController {
+@Controller
+public class PostController implements IPostController {
     public static final String APPLICATION_JSON = "application/json";
 
     private static PostController instance;
@@ -32,10 +34,12 @@ public class PostController {
         response.getWriter().print(gson.toJson(data));
     }
 
+    @Override
     public void all(HttpServletResponse response) throws IOException {
         sendJson(service.all(), response);
     }
 
+    @Override
     public void getById(long id, HttpServletResponse response) throws IOException {
         try {
             sendJson(service.getById(id), response);
@@ -44,6 +48,7 @@ public class PostController {
         }
     }
 
+    @Override
     public void save(Reader body, HttpServletResponse response) throws IOException {
         try {
             final var post = new Gson().fromJson(body, Post.class);
@@ -53,6 +58,7 @@ public class PostController {
         }
     }
 
+    @Override
     public void removeById(long id, HttpServletResponse response) throws IOException {
         service.removeById(id);
         response.getWriter().close();
