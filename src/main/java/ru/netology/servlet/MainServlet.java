@@ -1,8 +1,8 @@
 package ru.netology.servlet;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import ru.netology.controller.IPostController;
 import ru.netology.controller.PostController;
-import ru.netology.repository.PostRepository;
-import ru.netology.service.PostService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ public class MainServlet extends HttpServlet {
     private static final String PATH_WITH_ID = "/api/posts/\\d+";
     private static final String ID_CEPARATOR = "/";
 
-    private PostController controller;
+    private IPostController controller;
 
     private long parseIDFromPath(String path) {
         return Long.parseLong(path.substring(path.lastIndexOf(ID_CEPARATOR) + 1));
@@ -25,9 +25,8 @@ public class MainServlet extends HttpServlet {
 
     @Override
     public void init() {
-        final var repository = PostRepository.getInstance();
-        final var service = PostService.getInstance(repository);
-        controller = PostController.getInstance(service);
+        final var context = new AnnotationConfigApplicationContext("ru.netology");
+        controller = context.getBean(PostController.class);
     }
 
     @Override
