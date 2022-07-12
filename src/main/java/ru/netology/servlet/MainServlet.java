@@ -1,7 +1,6 @@
 package ru.netology.servlet;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import ru.netology.controller.IPostController;
 import ru.netology.controller.PostController;
 
 import javax.servlet.http.HttpServlet;
@@ -17,7 +16,7 @@ public class MainServlet extends HttpServlet {
     private static final String PATH_WITH_ID = "/api/posts/\\d+";
     private static final String ID_CEPARATOR = "/";
 
-    private IPostController controller;
+    private PostController controller;
 
     private long parseIDFromPath(String path) {
         return Long.parseLong(path.substring(path.lastIndexOf(ID_CEPARATOR) + 1));
