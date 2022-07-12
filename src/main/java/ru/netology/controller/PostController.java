@@ -28,13 +28,21 @@ public class PostController {
         sendJson(service.all(), response);
     }
 
-    public void getById(long id, HttpServletResponse response) throws IOException, NotFoundException {
-        sendJson(service.getById(id), response);
+    public void getById(long id, HttpServletResponse response) throws IOException {
+        try {
+            sendJson(service.getById(id), response);
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 
-    public void save(Reader body, HttpServletResponse response) throws IOException, NotFoundException {
-        final var post = new Gson().fromJson(body, Post.class);
-        sendJson(service.save(post), response);
+    public void save(Reader body, HttpServletResponse response) throws IOException {
+        try {
+            final var post = new Gson().fromJson(body, Post.class);
+            sendJson(service.save(post), response);
+        } catch (NotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     public void removeById(long id, HttpServletResponse response) throws IOException {
