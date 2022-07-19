@@ -7,28 +7,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 // Stub
 public class PostRepository implements IPostRepository {
 
-    protected static final Long startId = 0L;
-
-    private static PostRepository instance;
+    protected static final long START_ID = 0L;
 
     private final ConcurrentMap<Long, Post> posts;
 
-    private Long counter;
+    private final AtomicLong counter = new AtomicLong(START_ID + 1);
 
-    private PostRepository() {
+    public PostRepository() {
         this.posts = new ConcurrentHashMap<>();
-        this.counter = startId + 1;
-    }
-
-    public static PostRepository getInstance() {
-        if (instance == null) {
-            instance = new PostRepository();
-        }
-        return instance;
     }
 
     @Override
@@ -46,12 +37,11 @@ public class PostRepository implements IPostRepository {
     @Override
     public Post save(Post post) {
         final var id = post.getId();
-        if (id != startId && !posts.containsKey(id)) {
+        if (id != START_ID && !posts.containsKey(id)) {
             throw new NotFoundException();
         }
-        if (id == startId) {
-            post.setId(counter);
-            counter++;
+        if (id == START_ID) {
+            post.setId(counter.getAndIncrement());
         }
         posts.put(post.getId(), post);
         return posts.get(post.getId());

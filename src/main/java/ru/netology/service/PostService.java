@@ -8,18 +8,10 @@ import java.util.List;
 
 public class PostService {
 
-    private static PostService instance;
     private final IPostRepository repository;
 
-    private PostService(IPostRepository repository) {
+    public PostService(IPostRepository repository) {
         this.repository = repository;
-    }
-
-    public static PostService getInstance(IPostRepository repository) {
-        if (instance == null) {
-            instance = new PostService(repository);
-        }
-        return instance;
     }
 
     public List<Post> all() {
