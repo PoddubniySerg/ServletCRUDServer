@@ -16,10 +16,11 @@ public class PostRepository implements IPostRepository {
 
     private final ConcurrentMap<Long, Post> posts;
 
-    private final AtomicLong counter = new AtomicLong(START_ID + 1);
+    private final AtomicLong counter;
 
     public PostRepository() {
         this.posts = new ConcurrentHashMap<>();
+        this.counter = new AtomicLong(START_ID + 1);
     }
 
     @Override
@@ -29,9 +30,7 @@ public class PostRepository implements IPostRepository {
 
     @Override
     public Optional<Post> getById(long id) {
-        return posts.values().stream()
-                .filter(post -> post.getId() == id)
-                .findFirst();
+        return posts.containsKey(id) ? Optional.of(posts.get(id)) : Optional.empty();
     }
 
     @Override
