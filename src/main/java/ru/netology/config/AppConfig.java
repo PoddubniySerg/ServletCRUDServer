@@ -12,16 +12,16 @@ public class AppConfig {
 
     @Bean
     public PostController postController(PostService service) {
-        return PostController.getInstance(service);
+        return new PostController(service);
     }
 
     @Bean
     public PostService postService(IPostRepository repository) {
-        return PostService.getInstance(repository);
+        return new PostService(repository);
     }
 
     @Bean
     public IPostRepository postRepository() {
-        return PostRepository.getInstance();
+        return new PostRepository();
     }
 }
